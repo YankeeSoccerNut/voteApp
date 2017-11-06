@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
-var config = require('config.js');
+var config = require('../config.js');
 
 
 // set up the connection object we will need to use...
@@ -20,7 +20,13 @@ connection.connect((error)=>{
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  var selectQuery = "SELECT * FROM users;";
+  connection.query(selectQuery, (error, results, fields)=>{
+    console.log(error);
+    console.log(results)
+    res.render('index', {results});
+  }); // connection query
+
 });
 
 module.exports = router;

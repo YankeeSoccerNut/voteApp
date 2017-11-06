@@ -2,4 +2,6 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p Registered Users:
+  each user in results
+    li=user.name
