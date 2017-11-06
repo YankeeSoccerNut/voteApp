@@ -9,4 +9,15 @@ html
     link(rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css')
       
   body
-    block content
+  nav.navbar.navbar-default
+    .container-fluid
+      .navbar-header
+        a.navbar-brand(href='/') Rock or Not
+      ul.nav.navbar-nav
+        li.active
+          a(href='/register') Register
+        li
+          a(href='/login') Login
+        li
+          a(href='/standings') Standings
+  block content

@@ -1,7 +1,6 @@
 extends layout
 
 block content
-  h1= title
-  p Registered Users:
-  each user in results
-    li=user.name
+  -var welcomeMsg = 'Welcome ' + name + '!'
+  h1.text-center= 'Rock or Not'
+    h2.text-center= welcomeMsg

@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  div.container
+    div.row
+      div.col-sm-12
+        form(action='/loginProcess', method='post')
+          .form-group
+            label(for='email') Email Address:
+            input.form-control(type='email', name='email')
+            label(for='password') Password:
+            input.form-control(type='password', name='password')
+            button.btn.btn-primary Login!
+  h1= title

@@ -4,11 +4,20 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var config = require('./config.js'); // we added
 var index = require('./routes/index');
 var users = require('./routes/users');
+var session = require('express-session');  // we added
 
 var app = express();
+
+var sessionOptions = {
+  secret: config.sessionSalt,
+  resave: false,
+  saveUninitialized: true
+};
+
+app.use(session(sessionOptions)); // we added so we can use sessions across the app
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
