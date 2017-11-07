@@ -1,16 +1,10 @@
 extends layout
 
 block content
-  if (name != "")
-    -var welcomeMsg = 'Welcome ' + name + '!'
-  else
-    -var welcomeMsg = 'Anonymous Users Not Allowed'
-    
-  h1 'Rock or Not'
+  h1 Welcome #{name}! Vote - Rocks or Not?
   h3 #{band.title}
   div.col-sm-6.col-sm-offset-3.band-image
-    -var imageUrl = '/images/'+ band.imageUrl
-    img(src=imageUrl)
+    img(src=`/images/${band.imageUrl}`)
     a(href=`/vote/up/${band.id}`)
       button.btn.btn-success Rocks!
     a(href=`/vote/down/${band.id}`)

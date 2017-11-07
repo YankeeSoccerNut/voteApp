@@ -20,7 +20,7 @@ connection.connect((error)=>{
 
 /* GET home page. */
 router.get('/', secure_pass, function(req, res, next) {
-
+  console.log("in .get/ route...");
   const getBands = new Promise((resolve, reject)=>{
     var selectQuery = `SELECT * FROM bands;`;
     connection.query(selectQuery,(error,results)=>{
@@ -45,7 +45,6 @@ router.get('/', secure_pass, function(req, res, next) {
     res.json(error);
   });
 }); // router.get /
-
 
 
 router.get('/register', function(req, res, next) {
@@ -133,6 +132,8 @@ router.get('/vote/:direction/:bandId', secure_pass, (req, res)=>{
 
 // From stackoverflow response
 function secure_pass(req, res, next) {
+    console.log ("in secure_pass...");
+    console.log(req.session.loggedIn);
     if (req.session.loggedIn || req.path ==='/login') {
         next();
     } else {
