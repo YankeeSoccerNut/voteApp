@@ -19,12 +19,34 @@ connection.connect((error)=>{
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  if (req.session.name != undefined){
-    console.log(`Welcome, ${req.session.name}!`);
-  }
-  res.render('index', {name: req.session.name});
+router.get('/', secure_pass, function(req, res, next) {
+
+  const getBands = new Promise((resolve, reject)=>{
+    var selectQuery = `SELECT * FROM bands;`;
+    connection.query(selectQuery,(error,results)=>{
+      if (error){
+        reject(error);
+      } else {
+        var rand = Math.floor(Math.random() * results.length);
+        resolve(results[rand]);
+      };
+    });
+  });
+
+  getBands.then((bandObj)=>{
+    console.log(bandObj);
+    res.render('index', {
+      name: req.session.name,
+      band: bandObj
+    });
+  });
+
+  getBands.catch((error)=>{
+    res.json(error);
+  });
 }); // router.get /
+
+
 
 router.get('/register', function(req, res, next) {
     res.render('register', {});
@@ -34,7 +56,7 @@ router.get('/login', function(req, res, next) {
     res.render('login', {});
 }); // router.get /login
 
-router.get('/standings', function(req, res, next) {
+router.get('/standings', secure_pass, function(req, res, next) {
     res.render('standings', {});
 }); // router.get /standings
 
@@ -78,11 +100,14 @@ router.post('/loginProcess', function(req, res, next) {
         else {  // user exists...check password
           var passwordsMatch = bcrypt.compareSync(password, results[0].password);
           if (passwordsMatch) {
+            console.log("Passwords MATCH");
             req.session.name = results[0].name;
-            req.session.id = results[0].id;
+            req.session.uid = results[0].id;
             req.session.email = results[0].email;
-            res.redirect('/');
+            req.session.loggedIn = true;
+            res.redirect('/?msg=loginSuccess');
           } else {
+            console.log("Password MISMATCH");
             res.redirect('/login?msg=badPass');
           };
         };
@@ -90,5 +115,29 @@ router.post('/loginProcess', function(req, res, next) {
     });
 }); // router.post /loginProcess
 
+router.get('/vote/:direction/:bandId', secure_pass, (req, res)=>{
+  // res.json(req.params);
+  var bandId = req.params.bandId;
+  var direction = req.params.direction;
+
+  var insertVoteQuery = `INSERT INTO votes (imageID, voteDirection, userID) VALUES (?, ?, ?);`;
+
+  connection.query(insertVoteQuery, [bandId, direction, req.session.uid], (error, results)=>{
+    if (error) {
+      throw error;
+    } else {
+      res.redirect('/');
+    };
+  });
+});  // router.get /vote/:direction/:bandId
+
+// From stackoverflow response
+function secure_pass(req, res, next) {
+    if (req.session.loggedIn || req.path ==='/login') {
+        next();
+    } else {
+       res.redirect("/login?msg=mustlogin");
+    }
+}
 
 module.exports = router;

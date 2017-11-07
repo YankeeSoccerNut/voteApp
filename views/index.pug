@@ -1,6 +1,17 @@
 extends layout
 
 block content
-  -var welcomeMsg = 'Welcome ' + name + '!'
-  h1.text-center= 'Rock or Not'
-    h2.text-center= welcomeMsg
+  if (name != "")
+    -var welcomeMsg = 'Welcome ' + name + '!'
+  else
+    -var welcomeMsg = 'Anonymous Users Not Allowed'
+    
+  h1 'Rock or Not'
+  h3 #{band.title}
+  div.col-sm-6.col-sm-offset-3.band-image
+    -var imageUrl = '/images/'+ band.imageUrl
+    img(src=imageUrl)
+    a(href=`/vote/up/${band.id}`)
+      button.btn.btn-success Rocks!
+    a(href=`/vote/down/${band.id}`)
+      button.btn.btn-danger Not
