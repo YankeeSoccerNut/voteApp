@@ -21,9 +21,11 @@ connection.connect((error)=>{
 /* GET home page. */
 router.get('/', secure_pass, function(req, res, next) {
   console.log("in .get/ route...");
+  // get bands that THIS user has not voted on yet...
   const getBands = new Promise((resolve, reject)=>{
-    var selectQuery = `SELECT * FROM bands;`;
-    connection.query(selectQuery,(error,results)=>{
+    var selectQuery = `SELECT * FROM bands WHERE id NOT IN(
+      SELECT imageID FROM votes WHERE userID = ?);`;
+    connection.query(selectQuery,[req.session.uid],(error,results)=>{
       if (error){
         reject(error);
       } else {

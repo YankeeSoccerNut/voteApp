@@ -11,8 +11,7 @@ $(document).ready(()=>{
   };
 
   if (sessionStorage.getItem('isLoggedIn') == 'true') {
-    $('#register').remove();
-    $('#login').remove();
+    $('#register', '#login').remove();
   };
 
 }); // docment.ready
